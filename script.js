@@ -174,7 +174,7 @@ const vsData = [
         mcImg: 'fotos inac/Foto MC5.jpeg',
         mcText: 'Aulas / Laboratorio (MC)',
         realImg: 'fotos inac/Foto Real 5.jpeg',
-        realText: 'Aulas / Laboratorio (INAC)'
+        realText: 'Aulas  (INAC)'
     }
 ];
 
