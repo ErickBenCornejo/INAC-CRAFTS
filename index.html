@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recreación INAC - Portal Oficial</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+aa
+<body>
+
+    <nav class="game-nav">
+        <div class="nav-brand">
+            <span class="badge-tag">EXPO-FERIA</span>
+            <span class="brand-name">INAC CRAFT</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#inicio" class="nav-btn">Inicio</a></li>
+            <li><a href="#galeria" class="nav-btn">Mapa</a></li>
+            <li><a href="#lore" class="nav-btn">Detalles</a></li>
+            <li><a href="#" class="nav-btn nav-btn-qr" id="nav-qr">Código QR</a></li>
+            <li><a href="#" class="nav-btn nav-btn-video" id="nav-video">Anuncio</a></li>
+            <li><a href="creditos.html" class="nav-btn btn-highlight">Créditos (9)</a></li>
+        </ul>
+    </nav>
+
+    <header id="inicio" class="hero-panel">
+        <div class="hero-content">
+            <h1 class="glitch-title">RECREACIÓN INAC</h1>
+            <p class="hero-sub">Explora y descubre todas las curiosidades que nos llevo hacer este proyecto</p>
+            <div class="hero-cta">
+                <a href="#galeria" class="pixel-btn btn-gold">VER RECORRIDO</a>
+                <a href="#" class="pixel-btn btn-gold secondary-qr">Código QR</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-wrapper">
+        <section id="galeria" class="galeria-seccion">
+            <!-- ANUNCIO IZQUIERDO -->
+
+
+            <!-- CAJA CENTRAL DE LA GALERÍA -->
+            <div class="mc-panel main-panel">
+                <div class="panel-header">
+                    <span class="icon-block"></span>
+                    <h2>Galería de la Recreación</h2>
+                </div>
+
+                <div class="gallery-viewport">
+                    <div class="gallery-track" id="galleryTrack">
+                        <div class="gallery-item active">
+                            <img src="fotos inac/Foto MC1.jpeg" alt="Entrada Principal">
+                            <div class="item-overlay">Entrada Principal - Vista con Shaders</div>
+                        </div>
+                        <div class="gallery-item">
+                            <img src="fotos inac/Foto MC3.jpeg" alt="Aulas">
+                            <div class="item-overlay">Entrada a los comedores</div>
+                        </div>
+                        <div class="gallery-item">
+                            <img src="fotos inac/Foto MC4.jpeg" alt="Canchas">
+                            <div class="item-overlay">Pasillo de la dirección</div>
+                        </div>
+                    </div>
+                    <button class="nav-arrow left" id="prevSlide">&#10094;</button>
+                    <button class="nav-arrow right" id="nextSlide">&#10095;</button>
+                </div>
+
+                <div class="versus-container">
+                    <h3 class="panel-subtitle">Comparativa: MC vs Realidad</h3>
+
+                    <div class="versus-grid">
+                        <!-- Card Minecraft -->
+                        <div class="versus-card">
+                            <div class="versus-badge mc">MINECRAFT</div>
+                            <img id="mcImage" src="fotos inac/Foto MC1.jpeg" alt="En Juego">
+                            <p id="mcLabel">Parqueo principal (MC)</p>
+                        </div>
+
+                        <!-- Card Realidad -->
+                        <div class="versus-card">
+                            <div class="versus-badge real">REALIDAD</div>
+                            <img id="realImage" src="fotos inac/Foto Real 1.jpeg" alt="Vida Real">
+                            <p id="realLabel">Parqueo principal (INAC)</p>
+                        </div>
+                    </div>
+
+                    <!-- Indicador de foto (1 / 5) -->
+                    
+                </div>
+            </div>
+
+            <!-- ANUNCIO DERECHO -->
+
+        </section>
+
+        <section id="lore" class="mc-panel">
+            <div class="panel-header">
+                <span class="icon-block"></span>
+                <h2>Detalles Técnicos</h2>
+            </div>
+
+            <div class="lore-columns">
+                <article class="lore-box">
+                    <h3>¿Por qué se creó?</h3>
+                    <p>Este mundo tiene el proposito de entretener a los estudiantes con un fin educativo para dar un
+                        recorrido en nuestro honorable
+                        intituto "INAC"
+                    </p>
+                </article>
+
+                <article class="lore-box">
+                    <h3>¿Como podemos jugar?</h3>
+                    <p>Minecraft tiene un mecanismo de juego usando teclas, mouse y el tactil para moverse y ver
+                        estructuras, incluso nosotros hacer
+                        alguna creaación con nuestra imaginación </p>
+                </article>
+
+                <article class="lore-box">
+                    <h3>Mods</h3>
+                    <ul class="chips-list">
+                        <li>Easy NPC</li>
+                        <li>Farmers Delight</li>
+                        <li>framework</li>
+                        <li>Fruits Delight</li>
+                        <li>Furnitury</li>
+                        <li>MCW Doors</li>
+                        <li>MCW Lights</li>
+                        <li>MCW Roofs</li>
+                        <li>Refurbished</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <section class="mc-panel credits-teaser">
+            <div class="panel-header">
+                <span class="icon-block"></span>
+                <h2>desarrolladores del proyecto</h2>
+            </div>
+
+            <p class="teaser-text"> este trabaje estubimos invoucrados alumnos del instituto todos tomando el control en
+                diferentes areas
+                haciendo que nuestro proyecto este presentable y ordenado haciendolo agradable para cada uno de ustedes
+                muchas gracias por ver nuestro trabajo y cada uno de nosotros les decimos gracias
+            </p>
+
+            <div class="teaser-action">
+                <a href="creditos.html" class="pixel-btn btn-large">
+                    CONOCER A LOS 9 INTEGRANTES COMPLETOS
+                </a>
+            </div>
+        </section>
+
+
+
+
+
+        <!-- QR CODE MODAL -->
+        <div class="mc-modal-overlay" id="qr-modal">
+            <div class="mc-modal">
+                <h3>Generar Código QR</h3>
+                <div class="qr-code" id="qr-code"></div>
+                <button class="close-modal" onclick="closeQrModal()">Cerrar</button>
+            </div>
+        </div>
+
+        <footer class="game-footer">
+            <p>&copy; 2026 Proyecto Recreación del INAC | Creado para la Expo-Feria</p>
+        </footer>
+
+        <script src="script.js"></script>
+</body>
+
+</html>
