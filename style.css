@@ -488,7 +488,6 @@ body {
 .text-center { text-align: center; }
 .margin-top-40 { margin-top: 40px; }
 
-/* QR CODE MODAL */
 .mc-modal-overlay {
     position: fixed;
     top: 0;
@@ -521,6 +520,11 @@ body {
     width: 90%;
     transform: scale(0.8);
     transition: transform 0.3s;
+    /* CENTRADO FLEXBOX */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .mc-modal-overlay.active .mc-modal {
@@ -535,12 +539,20 @@ body {
     text-shadow: 2px 2px 0px #000;
 }
 
-#qrcode {
-    margin: 0 auto 20px;
+/* Corregido el selector ID a #qr-code y centrado de imagen interna */
+#qr-code {
+    margin: 0 auto 20px auto;
     background: #fff;
     padding: 10px;
     border: 3px solid var(--mc-gold);
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#qr-code img, #qr-code canvas {
+    display: block;
+    margin: 0 auto;
 }
 
 .mc-modal .close-modal {
@@ -552,6 +564,8 @@ body {
     padding: 10px 20px;
     cursor: pointer;
     transition: 0.2s;
+    position: relative;
+    z-index: 10;
 }
 
 .mc-modal .close-modal:hover {
@@ -733,4 +747,72 @@ body {
     .place-2 { order: 2; }
     .place-3 { order: 3; }
     .podium-item { width: 100%; }
+}
+
+/* AJUSTES RESPONSIVOS PARA CELULARES */
+@media screen and (max-width: 768px) {
+    /* Ajuste global de contenedores */
+    body {
+        overflow-x: hidden;
+    }
+
+    /* Adaptación del Menú */
+    .game-nav {
+        flex-direction: column;
+        padding: 10px;
+        position: relative;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+        margin-top: 10px;
+        padding: 0;
+    }
+
+    .nav-btn {
+        font-size: 11px;
+        padding: 6px 10px;
+    }
+
+    /* Adaptación de Secciones y Tarjetas */
+    .hero-panel, 
+    .hero-content,
+    main, 
+    section,
+    .mc-modal {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    .glitch-title {
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .hero-sub {
+        font-size: 13px;
+        text-align: center;
+        padding: 0 10px;
+    }
+
+    .hero-cta {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .pixel-btn {
+        width: 90%;
+        text-align: center;
+    }
+
+    /* Galería y Comparativa */
+    .gallery-container,
+    .comparison-container {
+        grid-template-columns: 1fr !important;
+        width: 100%;
+    }
 }

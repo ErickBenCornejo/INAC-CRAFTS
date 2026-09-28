@@ -31,35 +31,72 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 13000);
     }
 
-    // QR CODE MODAL
-    const qrButton = document.getElementById('nav-qr');
-    const secondaryQrButton = document.querySelector('.secondary-qr');
-    const qrModal = document.getElementById('qr-modal');
-    const qrCodeContainer = document.getElementById('qr-code');
+   // QR CODE MODAL
+const qrButton = document.getElementById('nav-qr');
+const secondaryQrButton = document.querySelector('.secondary-qr');
+const qrModal = document.getElementById('qr-modal');
+const qrCodeContainer = document.getElementById('qr-code');
+const closeQrBtn = document.getElementById('close-qr-btn'); // 1. Referencia al botón cerrar
 
-    function openQrModal() {
-        // Generate QR code pointing to the project URL
+// URL directa y fija del proyecto publicado en GitHub Pages
+const PUBLIC_PROJECT_URL = 'https://erickbencornejo.github.io/INAC-CRAFTS/';
+
+function openQrModal() {
+    if (!qrCodeContainer || !qrModal) return;
+
+    // Limpia cualquier QR generado previamente
+    qrCodeContainer.innerHTML = '';
+
+    // Genera el código QR
+    if (typeof QRCode !== 'undefined') {
         new QRCode(qrCodeContainer, {
-            text: window.location.href || 'https://erickbencornejo.github.io/INAC-CRAFTS/',
+            text: PUBLIC_PROJECT_URL,
             width: 200,
             height: 200,
             colorDark: '#000000',
             colorLight: '#ffffff',
             correctLevel: QRCode.CorrectLevel.H
         });
-        qrModal.classList.add('active');
     }
 
-    function closeQrModal() {
-        qrModal.classList.remove('active');
-        // Clear QR code on close
-        qrCodeContainer.innerHTML = '';
-    }
+    qrModal.classList.add('active');
+}
 
-    if (qrButton) qrButton.addEventListener('click', (e) => { e.preventDefault(); openQrModal(); });
-    if (secondaryQrButton) secondaryQrButton.addEventListener('click', (e) => { e.preventDefault(); openQrModal(); });
-    if (qrModal) qrModal.addEventListener('click', (e) => { if (e.target === qrModal) closeQrModal(); });
+// 2. Hacemos la función global para que responda a onclick="closeQrModal()"
+window.closeQrModal = function() {
+    if (qrModal) qrModal.classList.remove('active');
+    if (qrCodeContainer) qrCodeContainer.innerHTML = '';
+};
 
+// Event Listeners
+if (qrButton) {
+    qrButton.addEventListener('click', (e) => { 
+        e.preventDefault(); 
+        openQrModal(); 
+    });
+}
+
+if (secondaryQrButton) {
+    secondaryQrButton.addEventListener('click', (e) => { 
+        e.preventDefault(); 
+        openQrModal(); 
+    });
+}
+
+// Listener directo para el botón cerrar
+if (closeQrBtn) {
+    closeQrBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.closeQrModal();
+    });
+}
+
+// Cerrar al hacer clic en el fondo oscuro
+if (qrModal) {
+    qrModal.addEventListener('click', (e) => { 
+        if (e.target === qrModal) window.closeQrModal(); 
+    });
+}
     
 
     // VIDEO ANNOUNCEMENT MODAL

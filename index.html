@@ -4,18 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recreación INAC - Portal Oficial</title>
+    <title>Recreación INAC</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
-aa
+
 <body>
 
-    <nav class="game-nav">
+   <nav class="game-nav">
         <div class="nav-brand">
             <span class="badge-tag">EXPO-FERIA</span>
             <span class="brand-name">INAC CRAFT</span>
@@ -163,13 +164,13 @@ aa
 
 
         <!-- QR CODE MODAL -->
-        <div class="mc-modal-overlay" id="qr-modal">
-            <div class="mc-modal">
-                <h3>Generar Código QR</h3>
-                <div class="qr-code" id="qr-code"></div>
-                <button class="close-modal" onclick="closeQrModal()">Cerrar</button>
-            </div>
+       <div class="mc-modal-overlay" id="qr-modal">
+        <div class="mc-modal">
+            <h3>Escanea el Código QR</h3>
+            <div class="qr-code" id="qr-code"></div>
+            <button class="close-modal" onclick="closeQrModal()">Cerrar</button>
         </div>
+    </div>
 
         <footer class="game-footer">
             <p>&copy; 2026 Proyecto Recreación del INAC | Creado para la Expo-Feria</p>
