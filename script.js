@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function openQrModal() {
         // Generate QR code pointing to the project URL
         new QRCode(qrCodeContainer, {
-            text: window.location.href || 'https://recreacion-inac.github.io/',
+            text: window.location.href || 'https://erickbencornejo.github.io/INAC-CRAFTS/',
             width: 200,
             height: 200,
             colorDark: '#000000',
