@@ -16,7 +16,7 @@
 
 <body>
 
-   <nav class="game-nav">
+    <nav class="game-nav">
         <div class="nav-brand">
             <span class="badge-tag">EXPO-FERIA</span>
             <span class="brand-name">INAC CRAFT</span>
@@ -44,8 +44,7 @@
 
     <main class="main-wrapper">
         <section id="galeria" class="galeria-seccion">
-            <!-- ANUNCIO IZQUIERDO -->
-
+            
 
             <!-- CAJA CENTRAL DE LA GALERÍA -->
             <div class="mc-panel main-panel">
@@ -92,12 +91,12 @@
                         </div>
                     </div>
 
-                    <!-- Indicador de foto (1 / 5) -->
-                    
+                  
+
                 </div>
             </div>
 
-            <!-- ANUNCIO DERECHO -->
+          
 
         </section>
 
@@ -164,19 +163,81 @@
 
 
         <!-- QR CODE MODAL -->
-       <div class="mc-modal-overlay" id="qr-modal">
-        <div class="mc-modal">
-            <h3>Escanea el Código QR</h3>
-            <div class="qr-code" id="qr-code"></div>
-            <button class="close-modal" onclick="closeQrModal()">Cerrar</button>
+        <div class="mc-modal-overlay" id="qr-modal">
+            <div class="mc-modal">
+                <h3>Escanea el Código QR</h3>
+                <div class="qr-code" id="qr-code"></div>
+                <button class="close-modal" onclick="closeQrModal()">Cerrar</button>
+            </div>
         </div>
-    </div>
 
         <footer class="game-footer">
             <p>&copy; 2026 Proyecto Recreación del INAC | Creado para la Expo-Feria</p>
         </footer>
 
-        <script src="script.js"></script>
+ 
+
+        <!-- SDK oficial de Supabase -->
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+        
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+ <script src="script.js" defer></script>
+        <!-- MODAL DE CALIFICACIÓN OBLIGATORIA -->
+        <div id="mc-rating-modal" class="mc-rating-overlay" style="display: none;">
+            <div class="mc-rating-box">
+
+                <button id="btn-close-modal" class="mc-close-btn" title="Cancelar">&times;</button>
+                <h2 class="mc-rating-title">Un momentico</h2>
+                <p class="mc-rating-desc">Para poder salir de INAC CRAFT, debes calificar tu experiencia:
+                </p>
+
+                <div class="mc-stars-container">
+                    <span class="mc-star" data-value="1">★</span>
+                    <span class="mc-star" data-value="2">★</span>
+                    <span class="mc-star" data-value="3">★</span>
+                    <span class="mc-star" data-value="4">★</span>
+                    <span class="mc-star" data-value="5">★</span>
+                </div>
+
+                <p id="star-label" class="mc-star-label">Selecciona una calificación</p>
+
+                <div class="mc-buttons-wrapper">
+                    <button id="btn-submit-rating" class="mc-button-minecraft" disabled>ENVIAR Y SALIR</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL ADMINISTRADOR SECRETO (Pulsar SHIFT + A para abrir) -->
+        <div id="mc-admin-panel" class="mc-admin-overlay" style="display: none;">
+            <div class="mc-admin-box">
+                <div class="mc-admin-header">
+                    <h3>📊 ESTADÍSTICAS INAC CRAFT</h3>
+                    <button onclick="document.getElementById('mc-admin-panel').style.display='none'">X</button>
+                </div>
+                <div class="mc-admin-body">
+                    <div class="stat-card"><span>Total Visitas:</span> <strong id="stat-visits">0</strong></div>
+                    <div class="stat-card"><span>Total Opiniones:</span> <strong id="stat-ratings">0</strong></div>
+                    <div class="stat-card highlight"><span>Promedio / Aprobación:</span> <strong
+                            id="stat-percent">0%</strong></div>
+                    <hr>
+                    <p>Desglose por Estrellas:</p>
+                    <div class="bar-row">5★ <progress id="bar-5" value="0" max="100"></progress> <span
+                            id="count-5">0</span></div>
+                    <div class="bar-row">4★ <progress id="bar-4" value="0" max="100"></progress> <span
+                            id="count-4">0</span></div>
+                    <div class="bar-row">3★ <progress id="bar-3" value="0" max="100"></progress> <span
+                            id="count-3">0</span></div>
+                    <div class="bar-row">2★ <progress id="bar-2" value="0" max="100"></progress> <span
+                            id="count-2">0</span></div>
+                    <div class="bar-row">1★ <progress id="bar-1" value="0" max="100"></progress> <span
+                            id="count-1">0</span></div>
+                </div>
+            </div>
+        </div>
+
+       
+
 </body>
 
 </html>
