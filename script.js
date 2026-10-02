@@ -355,7 +355,7 @@ if (e.target.id === 'btn-submit-rating') {
 });
 
 // ==========================================
-// 3. ACTIVADORES DEL MODAL (PRECISIÓN TOTAL)
+// 3. ACTIVADORES DEL MODAL 
 // ==========================================
 function triggerRatingModal() {
   const modal = document.getElementById('mc-rating-modal');
@@ -388,21 +388,51 @@ document.documentElement.addEventListener('mouseleave', (e) => {
   }
 });
 
+
+// ==========================================
+// REGISTRO AUTOMÁTICO DE VISITA
+// ==========================================
+
+async function registrarVisita() {
+  
+  if (!sessionStorage.getItem('visited_session')) {
+    try {
+      await supabaseClient.from('views').insert([{}]);
+      
+      sessionStorage.setItem('visited_session', 'true');
+    } catch (err) {
+      console.error('Error al registrar visita:', err);
+    }
+  }
+}
+
+registrarVisita();
+
+
 // ==========================================
 // 4. CONSULTA GLOBAL SHIFT + A 
 // ==========================================
 window.addEventListener('keydown', async (e) => {
   if (e.shiftKey && (e.key === 'A' || e.key === 'a' || e.code === 'KeyA')) {
     try {
-      // Traer todas las calificaciones usando supabaseClient
-      const { data, error } = await supabaseClient
-        .from('ratings')
-        .select('rating');
+     
+      const [votosRes, visitasRes] = await Promise.all([
+        supabaseClient.from('ratings').select('rating'),
+        supabaseClient.from('views').select('id', { count: 'exact', head: true })
+      ]);
 
-      if (error) throw error;
+      if (votosRes.error) throw votosRes.error;
+      if (visitasRes.error) throw visitasRes.error;
+
+      const data = votosRes.data || [];
+      const totalVisitas = visitasRes.count || 0; // Total de visitas registradas
 
       if (!data || data.length === 0) {
-        alert('Aún no hay calificaciones registradas');
+        alert(
+          `ESTADÍSTICAS GLOBALES\n\n` +
+          `Total de visitas recibidas: ${totalVisitas}\n` +
+          `Total de votos recibidos: 0`
+        );
         return;
       }
 
@@ -412,13 +442,15 @@ window.addEventListener('keydown', async (e) => {
 
       data.forEach(row => {
         counts[row.rating] = (counts[row.rating] || 0) + 1;
-        sum += row.rating;
+        sum += Number(row.rating);
       });
 
       const average = (sum / total).toFixed(1);
 
+      // 2. Mostrar mensaje con Visitas + Desglose de Votos
       alert(
         `ESTADÍSTICAS GLOBALES\n\n` +
+        `Total de visitas recibidas: ${totalVisitas}\n` +
         `Total de votos recibidos: ${total}\n` +
         `Promedio general: ⭐ ${average} / 5\n\n` +
         `Desglose:\n` +
@@ -430,16 +462,33 @@ window.addEventListener('keydown', async (e) => {
       );
     } catch (err) {
       console.error('Error al consultar las estadísticas:', err);
-      alert('Error al conectar con la base de datos de Supabase.');
+      alert('Error al conectar con la base de datos.');
     }
   }
 });
 
-// ATAJO PARA PRUEBAS: REINICIAR MI VOTO LOCAL (SHIFT + D)
-window.addEventListener('keydown', (e) => {
+
+// ==========================================
+// REINICIO DE PRUEBAS SHIFT + D (VACÍA VISITAS Y VOTOS LOCALES)
+// ==========================================
+window.addEventListener('keydown', async (e) => {
   if (e.shiftKey && (e.key === 'D' || e.key === 'd' || e.code === 'KeyD')) {
-    localStorage.removeItem('hasRated');
-    alert('Registro local eliminado.');
-    location.reload();
+    try {
+      // Borra todas las visitas acumuladas en Supabase
+      const { error } = await supabaseClient.from('views').delete().neq('id', 0);
+      if (error) throw error;
+
+      // Limpia el estado de voto local
+      localStorage.removeItem('hasRated');
+
+      alert('Estado local limpio.');
+      location.reload();
+    } catch (err) {
+      console.error('Error al reiniciar las visitas:', err);
+      alert('Error al intentar reiniciar las visitas en Supabase.');
+    }
   }
 });
+
+// Ejecutar al cargar
+registrarVisita();
