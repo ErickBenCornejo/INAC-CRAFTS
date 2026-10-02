@@ -284,16 +284,27 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 20px;
     margin-top: 15px;
+    
 }
 
 .versus-card {
+
     position: relative;
     border: 3px solid #000;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #1e110a; /* Fondo estilo Minecraft */
+    overflow: hidden; /* Corta cualquier borde sobrante */
 }
 
 .versus-card img {
+   
     width: 100%;
+    height: 220px; /* Define una altura uniforme para ambas fotos */
+    object-fit: cover; /* Recorta la foto suavemente para llenar la tarjeta sin estirarla */
+    object-position: center; /* Centra el encuadre de la foto */
     display: block;
 }
 

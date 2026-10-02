@@ -149,34 +149,59 @@ if (qrModal) {
 const vsData = [
     {
         mcImg: 'fotos inac/Foto MC1.jpeg',
-        mcText: 'Parqueo principal (MC)',
+        mcText: 'Entrada principal (MC)',
         realImg: 'fotos inac/Foto Real 1.jpeg',
-        realText: 'Parqueo principal (INAC)'
+        realText: 'Entrada principal (INAC)'
     },
     {
-        mcImg: 'fotos inac/Foto MC2.jpeg',
-        mcText: 'Entrada Principal (MC)',
-        realImg: 'fotos inac/Foto Real 2.jpeg',
-        realText: 'Entrada Principal (INAC)'
-    },
-    {
-        mcImg: 'fotos inac/Foto MC3.jpeg',
+        mcImg: 'fotos inac/MC 2.jpeg',
         mcText: 'Canchas (MC)',
-        realImg: 'fotos inac/Foto Real 3.jpeg',
+        realImg: 'fotos inac/Real 2.jpeg',
         realText: 'Canchas (INAC)'
     },
     {
-        mcImg: 'fotos inac/Foto MC4.jpeg',
-        mcText: 'Pasillos (MC)',
-        realImg: 'fotos inac/Foto Real 4.jpeg',
-        realText: 'Pasillos (INAC)'
+        mcImg: 'fotos inac/MC 3.jpeg',
+        mcText: 'Parqueo principal (MC)',
+        realImg: 'fotos inac/Real 3.jpeg',
+        realText: 'Parqueo principal (INAC)'
     },
     {
-        mcImg: 'fotos inac/Foto MC5.jpeg',
-        mcText: 'Aulas / Laboratorio (MC)',
-        realImg: 'fotos inac/Foto Real 5.jpeg',
-        realText: 'Aulas  (INAC)'
+        mcImg: 'fotos inac/MC 4.jpeg',
+        mcText: 'Primer punto de reunión (MC)',
+        realImg: 'fotos inac/Real 4.jpeg',
+        realText: 'Primer punto de reunión (INAC)'
+    },
+    {
+        mcImg: 'fotos inac/MC 5.jpeg',
+        mcText: 'Dirección (MC)',
+        realImg: 'fotos inac/Real 5.jpeg',
+        realText: 'Dirección  (INAC)'
+    },
+     {
+        mcImg: 'fotos inac/MC 6.jpeg',
+        mcText: 'Primer edificio segunda planta (MC)',
+        realImg: 'fotos inac/Real 6.jpeg',
+        realText: 'Primer edificio segunda planta  (INAC)'
+    },
+     {
+        mcImg: 'fotos inac/MC 7.jpeg',
+        mcText: 'Vista desde el primer edificio (MC)',
+        realImg: 'fotos inac/Real 7.jpeg',
+        realText: 'Vista desde el primer edificio  (INAC)'
+    },
+     {
+        mcImg: 'fotos inac/MC 8.jpeg',
+        mcText: 'Pasillo primer edificio (MC)',
+        realImg: 'fotos inac/Real 8.jpeg',
+        realText: 'Pasillo primer edificio  (INAC)'
+    },
+     {
+        mcImg: 'fotos inac/MC 9.jpeg',
+        mcText: 'Baños (MC)',
+        realImg: 'fotos inac/Real 9.jpeg',
+        realText: 'Baños  (INAC)'
     }
+    
 ];
 
 let currentVsIndex = 0;
@@ -221,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(() => {
         currentVsIndex = (currentVsIndex + 1) % vsData.length;
         updateCarousel();
-    }, 5000);
+    }, 8000);
 });
 
 // ==========================================
