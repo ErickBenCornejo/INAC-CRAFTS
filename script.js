@@ -257,6 +257,65 @@ const SUPABASE_URL = 'https://dlcjffrvrbyesymmansd.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_tA5h0PtdKAAsLx2Aa8KJuQ_NSKdtQuT';
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// ==========================================
+// PROTECCIÓN DE DERECHOS Y DOMINIO NO AUTORIZADO
+// ==========================================
+
+// Lista de dominios donde SÍ permites que funcione tu página
+const DOMINIOS_PERMITIDOS = [
+  'erickbencornejo.github.io',
+  'localhost',
+  '127.0.0.1'
+];
+
+async function verificarLicencia() {
+  const dominioActual = window.location.hostname;
+
+  // Si el dominio no está en la lista permitida
+  if (!DOMINIOS_PERMITIDOS.includes(dominioActual)) {
+    
+    // A. Notificar a tu Supabase el intento de uso no autorizado
+    try {
+      await supabaseClient.from('unauthorized_uses').insert([{
+        domain: dominioActual,
+        full_url: window.location.href,
+        user_agent: navigator.userAgent
+      }]);
+    } catch (err) {
+      console.error('Error al reportar uso no autorizado:', err);
+    }
+
+    // B. Bloquear completamente la pantalla
+    document.body.innerHTML = `
+      <div style="
+        position: fixed; 
+        top: 0; left: 0; 
+        width: 100vw; height: 100vh; 
+        background: #000; 
+        color: #ff3333; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        justify-content: center; 
+        font-family: monospace; 
+        text-align: center; 
+        padding: 20px; 
+        z-index: 999999;
+      ">
+        <h1 style="font-size: 2.5rem; margin-bottom: 10px;">⚠️ PROYECTO NO AUTORIZADO ⚠️️</h1>
+        <p style="font-size: 1.2rem; color: #fff; max-width: 600px;">
+          Este código pertenece a <strong>Erick Cornejo</strong> y está siendo utilizado sin autorización en el dominio <code>${dominioActual}</code>.
+        </p>
+      </div>
+    `;
+
+    // C. Detener cualquier otra ejecución de código JS
+    throw new Error('Ejecución detenida: Dominio no autorizado.');
+  }
+}
+
+// Ejecutar la verificación inmediatamente
+verificarLicencia();
 
 let selectedRating = 0;
 let hasRated = localStorage.getItem('hasRated') === 'true';
