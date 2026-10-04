@@ -40,7 +40,7 @@ const qrCodeContainer = document.getElementById('qr-code');
 const closeQrBtn = document.getElementById('close-qr-btn'); // 1. Referencia al botón cerrar
 
 // URL directa y fija del proyecto publicado en GitHub Pages
-const PUBLIC_PROJECT_URL = 'https://erickbencornejo.github.io/INAC-CRAFTS/';
+const PUBLIC_PROJECT_URL = 'https://erickbencornejo.github.io/INAC-CRAFTS/index.html?src=qr';
 
 function openQrModal() {
     if (!qrCodeContainer || !qrModal) return;
