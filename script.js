@@ -256,15 +256,16 @@ document.addEventListener('DOMContentLoaded', () => {
 const SUPABASE_URL = 'https://dlcjffrvrbyesymmansd.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_tA5h0PtdKAAsLx2Aa8KJuQ_NSKdtQuT';
 
-// Usa el cliente global de Supabase
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let selectedRating = 0;
 let hasRated = localStorage.getItem('hasRated') === 'true';
-let modalDismissed = false;
+let modalDismissed = sessionStorage.getItem('modalDismissed') === 'true';
 let isInternalNavigation = false;
 
-// Evita que el modal salte si el usuario navega por el menú interno
+// Variable de bloqueo en memoria para evitar el doble conteo de visitas
+let ejecutandoRegistro = false;
+
 document.addEventListener('click', (e) => {
   if (e.target.tagName === 'A' || e.target.closest('nav') || e.target.classList.contains('nav-link')) {
     isInternalNavigation = true;
@@ -273,11 +274,11 @@ document.addEventListener('click', (e) => {
 });
 
 // ==========================================
-// 2. SELECCIÓN DE ESTRELLAS, ENVIAR Y CANCELAR
+// 2. LÓGICA DE ESTRELLAS Y ENVÍO EN EL MODAL ORIGINAL
 // ==========================================
 document.addEventListener('click', async (e) => {
   
-  // A. CLIC EN LAS ESTRELLAS
+  // A. Selección de estrellas
   if (e.target.classList.contains('mc-star')) {
     const star = e.target;
     selectedRating = parseInt(star.getAttribute('data-value'));
@@ -307,65 +308,102 @@ document.addEventListener('click', async (e) => {
     }
   }
 
- 
-  // B. CLIC EN "ENVIAR Y SALIR" 
-if (e.target.id === 'btn-submit-rating') {
-  if (!selectedRating) return;
+  // B. Guardar voto en Supabase
+  if (e.target.id === 'btn-submit-rating') {
+    if (!selectedRating) return;
 
-  const submitBtn = e.target;
-  
-  try {
-    // 1. Bloquear el botón para evitar múltiples envíos
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Enviando...';
+    const submitBtn = e.target;
+    
+    try {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando...';
 
-    // 2. Guardar voto en Supabase
-    const { error } = await supabaseClient
-      .from('ratings')
-      .insert([{ rating: selectedRating }]);
+      const { error } = await supabaseClient
+        .from('ratings')
+        .insert([{ rating: selectedRating }]);
 
-    if (error) throw error;
+      if (error) throw error;
 
-    // 3. Bloquear el modal localmente
-    localStorage.setItem('hasRated', 'true');
-    hasRated = true;
+      // Guardar permanentemente que ya votó
+      localStorage.setItem('hasRated', 'true');
+      sessionStorage.setItem('modalDismissed', 'true');
+      hasRated = true;
+      modalDismissed = true;
 
+      // Ocultar modal
+      const ratingModal = document.getElementById('mc-rating-modal');
+      if (ratingModal) ratingModal.style.display = 'none';
+
+      alert('¡Gracias por tu calificación! Esperamos te haya gustado :)');
+    } catch (err) {
+      console.error('Error al guardar en Supabase:', err);
+      alert('Hubo un problema al enviar tu voto. Intenta nuevamente.');
+      
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'ENVIAR Y SALIR';
+    }
+  }
+
+  // C. Cerrar modal original
+  if (e.target.id === 'btn-cancel-rating' || e.target.id === 'btn-close-modal' || e.target.classList.contains('mc-modal-close')) {
     const ratingModal = document.getElementById('mc-rating-modal');
     if (ratingModal) ratingModal.style.display = 'none';
-
-    alert('¡Gracias por tu calificación! Esperamos te haya gustado :)');
-  } catch (err) {
-    console.error('Error al guardar en Supabase:', err);
-    alert('Hubo un problema al enviar tu voto. Intenta nuevamente.');
-    
-    // Si hay un error, rehabilitar el botón
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'ENVIAR Y SALIR';
-  }
-}
-
-  // C. CLIC EN CANCELAR O CERRAR ('X')
-  if (e.target.id === 'btn-cancel-rating' || e.target.id === 'btn-close-modal') {
-    const ratingModal = document.getElementById('mc-rating-modal');
-    if (ratingModal) {
-      ratingModal.style.display = 'none';
-      modalDismissed = true;
-    }
+    modalDismissed = true;
+    sessionStorage.setItem('modalDismissed', 'true');
   }
 });
 
 // ==========================================
-// 3. ACTIVADORES DEL MODAL 
+// 3. ACTIVAR EL MODAL ORIGINAL
 // ==========================================
-function triggerRatingModal() {
+function triggerRatingModal(force = false) {
   const modal = document.getElementById('mc-rating-modal');
-  if (!hasRated && !modalDismissed && !isInternalNavigation && modal) {
+  // Si ya votó o ya cerró el modal, NO se vuelve a mostrar jamás
+  if (modal && !hasRated && !modalDismissed && (force || !isInternalNavigation)) {
     modal.style.display = 'flex';
   }
 }
 
-// A. Detector de pie de página 
+// INICIALIZACIÓN
 document.addEventListener('DOMContentLoaded', () => {
+
+  registrarVisita();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const origen = urlParams.get('src');
+
+  if (origen === 'qr' && !hasRated && !modalDismissed) {
+    // 1. Ocultar banner si existe
+    const bannerExpo = document.getElementById('banner-expo');
+    if (bannerExpo) bannerExpo.style.display = 'none';
+
+    // 2. Ocultar contenedor auxiliar si existía
+    const avisoPostExpo = document.getElementById('mensaje-post-expo');
+    if (avisoPostExpo) avisoPostExpo.style.display = 'none';
+
+    // 3. Modificar el texto INTERNO del modal original
+    const modalTitle = document.querySelector('#mc-rating-modal h2') || document.querySelector('#mc-rating-modal .mc-modal-title');
+    const modalText = document.querySelector('#mc-rating-modal p') || document.querySelector('#mc-rating-modal .mc-modal-subtitle');
+
+    if (modalTitle) {
+      modalTitle.innerText = '¡Gracias por tu interés!';
+      modalTitle.style.color = '#ffaa00';
+    }
+
+    if (modalText) {
+      modalText.innerText = 'La Expo-Feria finalizó, pero puedes apoyarnos evaluando tu experiencia:';
+    }
+
+    // 4. Abrir modal si no se ha votado ni cerrado antes
+    setTimeout(() => {
+      triggerRatingModal();
+    }, 200);
+
+    // 5. Limpiar el "?src=qr" de la barra de direcciones sin recargar la página
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+
+  // Detector de scroll al footer
   const footerElement = document.querySelector('footer') || document.querySelector('.creditos') || document.body.lastElementChild;
 
   if (footerElement) {
@@ -381,41 +419,39 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// B. Intención de salida hacia las pestañas arriba
+// Detector de salida hacia arriba (PC)
 document.documentElement.addEventListener('mouseleave', (e) => {
   if (e.clientY <= 0) {
     triggerRatingModal();
   }
 });
 
-
-// ==========================================
-// REGISTRO AUTOMÁTICO DE VISITA
-// ==========================================
-
+// Registrar Visita (Protegido contra doble conteo)
 async function registrarVisita() {
-  
-  if (!sessionStorage.getItem('visited_session')) {
-    try {
-      await supabaseClient.from('views').insert([{}]);
-      
-      sessionStorage.setItem('visited_session', 'true');
-    } catch (err) {
-      console.error('Error al registrar visita:', err);
-    }
+  if (sessionStorage.getItem('visited_session') || ejecutandoRegistro) {
+    return;
+  }
+
+  ejecutandoRegistro = true;
+
+  try {
+    sessionStorage.setItem('visited_session', 'true');
+
+    const { error } = await supabaseClient.from('views').insert([{}]);
+    if (error) throw error;
+
+  } catch (err) {
+    console.error('Error al registrar visita:', err);
+    sessionStorage.removeItem('visited_session');
+  } finally {
+    ejecutandoRegistro = false;
   }
 }
 
-registrarVisita();
-
-
-// ==========================================
-// 4. CONSULTA GLOBAL SHIFT + A 
-// ==========================================
+// Consultar Estadísticas SHIFT + A
 window.addEventListener('keydown', async (e) => {
   if (e.shiftKey && (e.key === 'A' || e.key === 'a' || e.code === 'KeyA')) {
     try {
-     
       const [votosRes, visitasRes] = await Promise.all([
         supabaseClient.from('ratings').select('rating'),
         supabaseClient.from('views').select('id', { count: 'exact', head: true })
@@ -425,14 +461,10 @@ window.addEventListener('keydown', async (e) => {
       if (visitasRes.error) throw visitasRes.error;
 
       const data = votosRes.data || [];
-      const totalVisitas = visitasRes.count || 0; // Total de visitas registradas
+      const totalVisitas = visitasRes.count || 0;
 
       if (!data || data.length === 0) {
-        alert(
-          `ESTADÍSTICAS GLOBALES\n\n` +
-          `Total de visitas recibidas: ${totalVisitas}\n` +
-          `Total de votos recibidos: 0`
-        );
+        alert(`ESTADÍSTICAS GLOBALES\n\nTotal de visitas recibidas: ${totalVisitas}\nTotal de votos recibidos: 0`);
         return;
       }
 
@@ -447,7 +479,6 @@ window.addEventListener('keydown', async (e) => {
 
       const average = (sum / total).toFixed(1);
 
-      // 2. Mostrar mensaje con Visitas + Desglose de Votos
       alert(
         `ESTADÍSTICAS GLOBALES\n\n` +
         `Total de visitas recibidas: ${totalVisitas}\n` +
@@ -462,33 +493,21 @@ window.addEventListener('keydown', async (e) => {
       );
     } catch (err) {
       console.error('Error al consultar las estadísticas:', err);
-      alert('Error al conectar con la base de datos.');
     }
   }
 });
 
-
-// ==========================================
-// REINICIO DE PRUEBAS SHIFT + D (VACÍA VISITAS Y VOTOS LOCALES)
-// ==========================================
+// Reiniciar datos SHIFT + D
 window.addEventListener('keydown', async (e) => {
   if (e.shiftKey && (e.key === 'D' || e.key === 'd' || e.code === 'KeyD')) {
     try {
-      // Borra todas las visitas acumuladas en Supabase
-      const { error } = await supabaseClient.from('views').delete().neq('id', 0);
-      if (error) throw error;
-
-      // Limpia el estado de voto local
+      await supabaseClient.from('views').delete().neq('id', 0);
       localStorage.removeItem('hasRated');
-
-      alert('Estado local limpio.');
+      sessionStorage.removeItem('modalDismissed');
+      alert('Estado local e historial reiniciado.');
       location.reload();
     } catch (err) {
-      console.error('Error al reiniciar las visitas:', err);
-      alert('Error al intentar reiniciar las visitas en Supabase.');
+      console.error('Error al reiniciar:', err);
     }
   }
 });
-
-// Ejecutar al cargar
-registrarVisita();
